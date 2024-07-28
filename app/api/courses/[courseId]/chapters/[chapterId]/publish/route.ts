@@ -14,7 +14,7 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const ownCourse = await db.course.findUnique({
+    const ownCourse = await db.course.findFirst({
       where: {
         id: params.courseId,
         userId,
@@ -25,7 +25,7 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const chapter = await db.chapter.findUnique({
+    const chapter = await db.chapter.findFirst({
       where: {
         id: params.chapterId,
         courseId: params.courseId,
