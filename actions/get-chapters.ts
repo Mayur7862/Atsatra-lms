@@ -13,6 +13,7 @@ export const getChapter = async ({
   chapterId,
 }: GetChapterProps) => {
   try {
+    // Query to find the purchase record
     const purchase = await db.purchase.findUnique({
       where: {
         userId_courseId: {
@@ -22,16 +23,18 @@ export const getChapter = async ({
       }
     });
 
-    const course = await db.course.findUnique({
+    // Query to find the published course
+    const course = await db.course.findFirst({
       where: {
-        isPublished: true,
         id: courseId,
+        isPublished: true,
       },
       select: {
         price: true,
       }
     });
 
+    // Query to find the chapter
     const chapter = await db.chapter.findUnique({
       where: {
         id: chapterId,
@@ -47,6 +50,7 @@ export const getChapter = async ({
     let attachments: Attachment[] = [];
     let nextChapter: Chapter | null = null;
 
+    // If the user has purchased the course, fetch attachments
     if (purchase) {
       attachments = await db.attachment.findMany({
         where: {
@@ -55,6 +59,7 @@ export const getChapter = async ({
       });
     }
 
+    // If the chapter is free or the user has purchased the course
     if (chapter.isFree || purchase) {
       muxData = await db.muxData.findUnique({
         where: {
@@ -62,6 +67,7 @@ export const getChapter = async ({
         }
       });
 
+      // Find the next chapter in the course
       nextChapter = await db.chapter.findFirst({
         where: {
           courseId: courseId,
@@ -76,6 +82,7 @@ export const getChapter = async ({
       });
     }
 
+    // Get the user’s progress on the chapter
     const userProgress = await db.userProgress.findUnique({
       where: {
         chapterId_userId: {
