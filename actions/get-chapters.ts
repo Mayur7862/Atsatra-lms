@@ -35,7 +35,7 @@ export const getChapter = async ({
     });
 
     // Query to find the chapter
-    const chapter = await db.chapter.findUnique({
+    const chapter = await db.chapter.findFirst({
       where: {
         id: chapterId,
         isPublished: true,
