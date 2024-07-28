@@ -14,7 +14,7 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const course = await db.course.findUnique({
+    const course = await db.course.findFirst({
       where: {
         id: params.courseId,
         userId,
@@ -25,7 +25,7 @@ export async function PATCH(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    const unpublishedCourse = await db.course.update({
+    const unpublishedCourse = await db.course.updateMany({
       where: {
         id: params.courseId,
         userId,

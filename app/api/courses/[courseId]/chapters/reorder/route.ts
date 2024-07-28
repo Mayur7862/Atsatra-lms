@@ -14,7 +14,7 @@ export async function PUT(
     }
 
     const { list } = await req.json();
-    const ownCourse = await db.course.findUnique({
+    const ownCourse = await db.course.findFirst({
       where: {
         id: params.courseId,
         userId: userId,
